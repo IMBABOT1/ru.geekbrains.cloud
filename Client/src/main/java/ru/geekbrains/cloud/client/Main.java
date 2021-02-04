@@ -11,7 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
-        primaryStage.setTitle("Brains Cloud CLient");
+        primaryStage.setTitle("Brains Cloud Client");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
