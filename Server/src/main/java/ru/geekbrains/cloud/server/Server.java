@@ -19,11 +19,6 @@ public class Server {
             System.out.println("Client Connect");
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             DataInputStream in = new DataInputStream(socket.getInputStream());
-            while (true) {
-                String msg = in.readUTF();
-                System.out.println("Client msg: " + msg);
-                out.writeUTF("Echo: " + msg);
-            }
         }catch (IOException e){
             e.printStackTrace();
         }

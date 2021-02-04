@@ -3,6 +3,8 @@ package ru.geekbrains.cloud.client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -18,10 +20,15 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    TextArea textArea;
+    ListView<String> clientsFiles;
 
     @FXML
-    TextField textField;
+    ListView<String> serverFiles;
+
+    @FXML
+    Label label1;
+
+
 
     private Socket socket;
     private DataInputStream in;
@@ -30,36 +37,24 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            clientsFiles.getItems().addAll("File", "File1", "File2");
+            serverFiles.getItems().addAll("File", "File1", "File2");
             socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true){
-                        String msg = null;
-                        try {
-                            msg = in.readUTF();
-                            System.out.println("Server: " + msg + "\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }).start();
         }catch (IOException e){
             throw new RuntimeException("Server is down");
         }
     }
 
 
-    public void sendMsg(ActionEvent actionEvent) {
-        try {
-            out.writeUTF(textField.getText()+ "\n");
-            textField.setText("");
-            textField.requestFocus();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public void btnClickSelectedClientFile(ActionEvent actionEvent) {
+        label1.setText(clientsFiles.getSelectionModel().getSelectedItem());
+
+    }
+
+    public void btnClickSelectedServerFile(ActionEvent actionEvent) {
+        label1.setText(serverFiles.getSelectionModel().getSelectedItem());
     }
 }

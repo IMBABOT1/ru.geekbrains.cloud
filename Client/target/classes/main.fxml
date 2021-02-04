@@ -10,6 +10,14 @@
 <?import javafx.scene.control.ListView?>
 <VBox fx:controller="ru.geekbrains.cloud.client.Controller"
       xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <TextArea fx:id="textArea" maxWidth="Infinity" editable="false"></TextArea>
-    <TextField fx:id="textField" onAction="#sendMsg" maxWidth="Infinity"></TextField>
+       <HBox VBox.vgrow="ALWAYS">
+           <ListView HBox.hgrow="ALWAYS" fx:id="clientsFiles"></ListView>
+           <ListView HBox.hgrow="ALWAYS" fx:id="serverFiles"></ListView>
+       </HBox>
+
+        <HBox>
+            <Button text="Select Client File" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#btnClickSelectedClientFile"></Button>
+            <Button text="Select Server File" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#btnClickSelectedServerFile"></Button>
+        </HBox>
+    <Label fx:id="label1" text="..." maxWidth="-Infinity"></Label>
 </VBox>
