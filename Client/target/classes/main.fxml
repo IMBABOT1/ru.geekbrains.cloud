@@ -7,7 +7,16 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ListView?>
 <VBox fx:controller="ru.geekbrains.cloud.client.Controller"
       xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <TextArea VBox.vgrow="ALWAYS" editable="false"/>
+    <HBox VBox.vgrow="ALWAYS">
+        <ListView HBox.hgrow="ALWAYS" fx:id="clientFiles"/>
+        <ListView HBox.hgrow="ALWAYS" fx:id="serverFiles"/>
+    </HBox>
+
+    <HBox>
+        <Button text="Selected Client File!" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#btnClickSelectedClientFile"></Button>
+        <Button text="Selected Server File!" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#btnCLickMeAction"></Button>
+    </HBox>
 </VBox>
