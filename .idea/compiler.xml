@@ -8,7 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Client" />
         <module name="Server" />
+        <module name="temp" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common" target="8" />
+      <module name="Common" target="8" />
+      <module name="ru.geebrains.cloud.common" target="8" />
+      <module name="ru.geekbrains.cloud.common" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

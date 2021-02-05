@@ -16,8 +16,8 @@
        </HBox>
 
         <HBox>
-            <Button text="Select Client File" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#btnClickSelectedClientFile"></Button>
-            <Button text="Select Server File" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#btnClickSelectedServerFile"></Button>
+            <Button text="Download" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#download"></Button>
+            <Button text="Upload" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#upload"></Button>
         </HBox>
     <Label fx:id="label1" text="..." maxWidth="-Infinity"></Label>
 </VBox>
