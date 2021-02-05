@@ -14,17 +14,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
             if (msg instanceof FileRequest) {
-                System.out.println(3);
                 FileRequest fr = (FileRequest) msg;
-                System.out.println(fr.getFilename());
                 if (Files.exists(Paths.get("ServerStorage/" + fr.getFilename()))) {
-                    System.out.println(5);
                     FileMessage fm = new FileMessage(Paths.get("ServerStorage/" + fr.getFilename()));
-                    System.out.println(6);
                     ctx.writeAndFlush(fm);
-                    System.out.println(7);
                 }
             }
+
+
         }finally {
             ReferenceCountUtil.release(msg);
         }

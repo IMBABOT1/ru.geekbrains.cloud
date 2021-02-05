@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import ru.geekbrains.cloud.common.AbstractMessage;
 import ru.geekbrains.cloud.common.FileMessage;
 import ru.geekbrains.cloud.common.FileRequest;
+import ru.geekbrains.cloud.common.FileSend;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -48,13 +49,23 @@ public class Controller implements Initializable {
                 public void run() {
                     try {
                         AbstractMessage message = (AbstractMessage) in.readObject();
-                        System.out.println(8);
-                        System.out.println(message);
                         if (message instanceof AbstractMessage){
-                            System.out.println(9);
                             FileMessage fm = (FileMessage) message;
                             System.out.println(fm);
-                            Files.write(Paths.get("/clientStorage" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                            Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                        }
+                        if (message instanceof FileSend){
+                            FileSend fs = (FileSend) message;
+                            System.out.println(fs);
+                            System.out.println(2);
+                            if (Files.exists(Paths.get("ClientStorage/" + fs.getFilename()))) {
+                                System.out.println(3);
+                                FileMessage fm = new FileMessage(Paths.get("ClientStorage/" + fs.getFilename()));
+                                System.out.println(fm.getName());
+                                out.writeObject(fm);
+                                System.out.println(4);
+                            }
+
                         }
 
                     } catch (ClassNotFoundException e) {
@@ -102,13 +113,13 @@ public class Controller implements Initializable {
     }
 
 
-    public void download(ActionEvent actionEvent) {
 
+    public void download(ActionEvent actionEvent) {
         sendMessage(new FileRequest("12.txt"));
-        System.out.println(2);
     }
 
     public void upload(ActionEvent actionEvent) {
-
+        sendMessage(new FileSend("321.txt"));
+        System.out.println(1);
     }
 }

@@ -1,6 +1,6 @@
 package ru.geekbrains.cloud.common;
 
-public class FileRequest extends AbstractMessage {
+public class FileSend extends AbstractMessage {
 
     public String getFilename() {
         return filename;
@@ -8,7 +8,7 @@ public class FileRequest extends AbstractMessage {
 
     private String filename;
 
-    public FileRequest(String filename){
+    public FileSend(String filename){
         this.filename = filename;
     }
 }
