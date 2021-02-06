@@ -18,15 +18,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         try {
             System.out.println(msg.toString());
             if (msg instanceof FileRequest) {
-                System.out.println(1);
                 FileRequest fr = (FileRequest) msg;
-                System.out.println(2);
                 if (Files.exists(Paths.get("ServerStorage/" + fr.getFilename()))) {
-                    System.out.println(3);
                     FileMessage fm = new FileMessage(Paths.get("ServerStorage/" + fr.getFilename()));
-                    System.out.println(4);
                     ctx.writeAndFlush(fm);
-                    System.out.println(5);
                 }
             }
             if (msg instanceof FileSend) {

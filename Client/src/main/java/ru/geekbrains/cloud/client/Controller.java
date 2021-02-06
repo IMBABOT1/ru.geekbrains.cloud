@@ -90,7 +90,6 @@ public class Controller implements Initializable {
                             AbstractMessage message = (AbstractMessage) network.getIn().readObject();
                             System.out.println(message.toString());
                             if (message instanceof FileMessage) {
-                                System.out.println(6);
                                 FileMessage fm = (FileMessage) message;
                                 Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
                             }
@@ -149,7 +148,7 @@ public class Controller implements Initializable {
 
 
     public void clientDownload(ActionEvent actionEvent) {
-        Network.sendMessage(new FileRequest("RogueLike.rar"));
+        Network.sendMessage(new FileRequest(serverFiles.getSelectionModel().getSelectedItem()));
         System.out.println(1);
     }
 
@@ -169,8 +168,14 @@ public class Controller implements Initializable {
     }
 
     public void clientDelete(ActionEvent actionEvent) {
+        try {
+            Files.delete(Paths.get("clientStorage/" + clientsFiles.getSelectionModel().getSelectedItem()));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void serverDelete(ActionEvent actionEvent) {
+
     }
 }
