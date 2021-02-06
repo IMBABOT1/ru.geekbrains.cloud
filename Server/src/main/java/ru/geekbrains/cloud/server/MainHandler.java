@@ -31,11 +31,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 ctx.writeAndFlush(clientsFiles);
             }
             if (msg instanceof ServerDeleteFile){
-                System.out.println(2);
                 ServerDeleteFile sd = (ServerDeleteFile) msg;
                 System.out.println(sd.getFilename());
                 Files.delete(Paths.get("ServerStorage/" + sd.getFilename()));
-                System.out.println(3);
             }
 
         }finally {

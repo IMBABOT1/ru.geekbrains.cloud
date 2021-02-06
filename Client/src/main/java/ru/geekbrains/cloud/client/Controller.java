@@ -1,3 +1,4 @@
+
 package ru.geekbrains.cloud.client;
 
 import javafx.application.Platform;
@@ -82,40 +83,40 @@ public class Controller implements Initializable {
             return;
         }
         network = new Network(8189);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (true) {
-                            AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                            System.out.println(message.toString());
-                            if (message instanceof FileMessage) {
-                                FileMessage fm = (FileMessage) message;
-                                Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
-                            }
-                            if (message instanceof GetServerListFiles) {
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        serverFiles.getItems().clear();
-                                        GetServerListFiles list = (GetServerListFiles) message;
-                                        try {
-                                            Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-
-                            }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                        System.out.println(message.toString());
+                        if (message instanceof FileMessage) {
+                            FileMessage fm = (FileMessage) message;
+                            Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
                         }
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if (message instanceof GetServerListFiles) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    serverFiles.getItems().clear();
+                                    GetServerListFiles list = (GetServerListFiles) message;
+                                    try {
+                                        Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                        }
                     }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }).start();
+            }
+        }).start();
 
     }
 
