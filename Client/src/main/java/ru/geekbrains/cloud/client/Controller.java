@@ -4,14 +4,12 @@ package ru.geekbrains.cloud.client;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import ru.geekbrains.cloud.common.*;
 
@@ -67,10 +65,16 @@ public class Controller implements Initializable {
     @FXML
     Button serverRenew;
 
+    @FXML
+    Button login;
+
+    @FXML
+    TextField loginField;
 
 
     public Network network;
     private boolean authenticated;
+    private String login1;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -137,37 +141,42 @@ public class Controller implements Initializable {
             public void run() {
                 try {
                     while (true) {
-                        AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                        System.out.println(message.toString());
-                        if (message instanceof FileMessage) {
-                            FileMessage fm = (FileMessage) message;
-                            Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                        String username = (String) Network.getIn().readObject();
+                        if (username instanceof String) {
+                            System.out.println(username);
+                            setAuthenticated(true);
                         }
-                        if (message instanceof GetServerListFiles) {
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    serverFiles.getItems().clear();
-                                    GetServerListFiles list = (GetServerListFiles) message;
-                                    try {
-                                        Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
 
+                        while (true) {
+                            AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                            if (message instanceof FileMessage) {
+                                FileMessage fm = (FileMessage) message;
+                                Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                            }
+                            if (message instanceof GetServerListFiles) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        serverFiles.getItems().clear();
+                                        GetServerListFiles list = (GetServerListFiles) message;
+                                        try {
+                                            Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
                         }
                     }
-                } catch (ClassNotFoundException e) {
+                }catch (ClassNotFoundException e){
                     e.printStackTrace();
-                } catch (IOException e) {
+                }catch (IOException e){
                     e.printStackTrace();
                 }
-            }
-        }).start();
-
-    }
+                }
+            }).start();
+        }
 
 
     public void refreshLocalList() {
@@ -219,7 +228,7 @@ public class Controller implements Initializable {
     public void clientDelete(ActionEvent actionEvent) {
         try {
             Files.delete(Paths.get("clientStorage/" + clientsFiles.getSelectionModel().getSelectedItem()));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -227,9 +236,27 @@ public class Controller implements Initializable {
     public void serverDelete(ActionEvent actionEvent) {
         ServerDeleteFile serverDeleteFile = new ServerDeleteFile(serverFiles.getSelectionModel().getSelectedItem());
         Network.sendMessage(serverDeleteFile);
-        System.out.println(1);
+    }
+
+    public void sendLoginPass(String login, String pass) {
+        TryToAuth tryToAuth = new TryToAuth(login, pass);
+        Network.sendMessage(tryToAuth);
     }
 
     public void tryToAuth(ActionEvent actionEvent) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                login.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        sendLoginPass(loginField.getText(), passwordField.getText());
+                        loginField.clear();
+                        passwordField.clear();
+                    }
+                });
+            }
+        });
     }
 }
+

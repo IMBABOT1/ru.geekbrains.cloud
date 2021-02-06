@@ -15,7 +15,7 @@
                 <Font name="System" size="16"/>
             </font>
         </PasswordField>
-        <Button HBox.hgrow="ALWAYS" text="Войти"  minWidth="100" onAction="#tryToAuth">
+        <Button fx:id="login" HBox.hgrow="ALWAYS" text="Войти"  minWidth="100" onAction="#tryToAuth">
             <font>
                 <Font name="System" size="16"/>
             </font>

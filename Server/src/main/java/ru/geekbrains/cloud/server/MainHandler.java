@@ -10,8 +10,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
+
+    private SqlAuthManager sqlAuthManager;
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        sqlAuthManager = new SqlAuthManager();
         try {
             System.out.println(msg.toString());
             if (msg instanceof FileRequest) {
@@ -32,8 +36,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             }
             if (msg instanceof ServerDeleteFile){
                 ServerDeleteFile sd = (ServerDeleteFile) msg;
-                System.out.println(sd.getFilename());
                 Files.delete(Paths.get("ServerStorage/" + sd.getFilename()));
+            }
+
+            if (msg instanceof TryToAuth){
+                String username = "";
+                TryToAuth sd = (TryToAuth) msg;
+                username = sqlAuthManager.getNickNameByLoginAndPassword(sd.getLogin(), sd.getPass());
+                ctx.writeAndFlush(username);
             }
 
         }finally {

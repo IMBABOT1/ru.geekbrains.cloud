@@ -33,9 +33,18 @@ public class SqlAuthManager implements AuthManager {
         }
     }
 
-
     @Override
     public String getNickNameByLoginAndPassword(String login, String password) throws SQLException {
-        return null;
+        String s = "";
+        try {
+            ResultSet rs = statement.executeQuery("SELECT USERNAME FROM users WHERE login like " + "'" + login + "'" + "AND pass like " + "'" + password + "'");
+            while (rs.next()) {
+                s = (rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return s;
     }
+
 }
