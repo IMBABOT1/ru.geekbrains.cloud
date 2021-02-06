@@ -4,7 +4,6 @@ package ru.geekbrains.cloud.client;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -243,20 +242,12 @@ public class Controller implements Initializable {
         Network.sendMessage(tryToAuth);
     }
 
-    public void tryToAuth(ActionEvent actionEvent) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                login.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        sendLoginPass(loginField.getText(), passwordField.getText());
-                        loginField.clear();
-                        passwordField.clear();
-                    }
-                });
-            }
-        });
+    public void tryToAuth() {
+        System.out.println(1);
+        sendLoginPass(loginField.getText(), passwordField.getText());
+        loginField.clear();
+        passwordField.clear();
+        System.out.println(2);
     }
 }
 

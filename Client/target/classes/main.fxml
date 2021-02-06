@@ -10,7 +10,7 @@
                 <Font name="System" size="16"/>
             </font>
         </TextField>
-        <PasswordField fx:id="passwordField" promptText="password" onAction="#tryToAuth" HBox.hgrow="ALWAYS">
+        <PasswordField fx:id="passwordField" promptText="password"  onAction="#tryToAuth" HBox.hgrow="ALWAYS">
             <font>
                 <Font name="System" size="16"/>
             </font>
