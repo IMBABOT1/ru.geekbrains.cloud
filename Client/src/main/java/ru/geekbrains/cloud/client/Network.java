@@ -9,22 +9,22 @@ import java.net.Socket;
 
 public class Network {
 
-    private Socket socket;
+    private static Socket socket;
 
     public Socket getSocket() {
         return socket;
     }
 
-    public ObjectEncoderOutputStream getOut() {
+    public static ObjectEncoderOutputStream getOut() {
         return out;
     }
 
-    public ObjectDecoderInputStream getIn() {
+    public static ObjectDecoderInputStream getIn() {
         return in;
     }
 
-    private ObjectEncoderOutputStream out;
-    private ObjectDecoderInputStream in;
+    private static ObjectEncoderOutputStream out;
+    private static ObjectDecoderInputStream in;
 
 
     public Network(int port){
@@ -38,7 +38,7 @@ public class Network {
     }
 
 
-    public boolean sendMessage(AbstractMessage abstractMessage){
+    public static boolean sendMessage(AbstractMessage abstractMessage){
         try {
             out.writeObject(abstractMessage);
             return true;
@@ -50,7 +50,7 @@ public class Network {
     }
 
 
-    public boolean isConnected(){
+    public static boolean isConnected(){
         if (socket == null || socket.isClosed()){
             return false;
         }
@@ -58,7 +58,7 @@ public class Network {
     }
 
 
-    public void stop(){
+    public static void stop(){
         try {
             in.close();
         } catch (IOException e) {

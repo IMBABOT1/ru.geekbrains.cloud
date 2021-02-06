@@ -9,10 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import ru.geekbrains.cloud.common.AbstractMessage;
-import ru.geekbrains.cloud.common.FileMessage;
-import ru.geekbrains.cloud.common.FileRequest;
-import ru.geekbrains.cloud.common.FileSend;
+import ru.geekbrains.cloud.common.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,6 +45,7 @@ public class Controller implements Initializable {
     public Network network;
 
     private Path clientStorage = Paths.get("clientStorage/");
+    private Path serverStorage = Paths.get("serverStorage/");
 
 
     private void moveCloudLabel(){
@@ -78,12 +76,8 @@ public class Controller implements Initializable {
             moveCloudLabel();
             moveServerLabel();
             ObservableList<String> clients  = observableArrayList();
-            refreshLocalList();
+            ObservableList<String> server = observableArrayList();
 
-
-
-        ObservableList<String> server = observableArrayList();
-        serverFiles.setItems(server);
 
 
 
@@ -96,17 +90,30 @@ public class Controller implements Initializable {
                             FileMessage fm = (FileMessage) message;
                             Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
                         }
+                        if (message instanceof  GetServerListFiles){
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    serverFiles.getItems().clear();
+                                    GetServerListFiles list = (GetServerListFiles) message;
+                                    try {
+                                        Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                        }
 
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } finally {
-                        network.stop();
+                    }finally {
+                        Network.stop();
                     }
                 }
-            }).start();
-        }
 
 
     public void refreshLocalList(){
@@ -121,7 +128,9 @@ public class Controller implements Initializable {
               }
             }
         });
+    }
 
+    public void refreshServerList(){
     }
 
 
@@ -135,16 +144,24 @@ public class Controller implements Initializable {
 
 
     public void clientDownload(ActionEvent actionEvent) {
-        network.sendMessage(new FileRequest("12.txt"));
+        Network.sendMessage(new FileRequest("12.txt"));
     }
 
     public void clientUpload(ActionEvent actionEvent) {
         FileSend fileSend = new FileSend(Paths.get("clientStorage/" + "rogueLike.rar"));
-        network.sendMessage(fileSend);
+        Network.sendMessage(fileSend);
+    }
+
+    public void serverRenew(ActionEvent actionEvent) {
+        GetServerListFiles get = new GetServerListFiles("/getList");
+        Network.sendMessage(get);
     }
 
 
+
+
     public void clientRenew(ActionEvent actionEvent) {
+        refreshLocalList();
     }
 
     public void clientDelete(ActionEvent actionEvent) {
@@ -153,6 +170,5 @@ public class Controller implements Initializable {
     public void serverDelete(ActionEvent actionEvent) {
     }
 
-    public void serverRenew(ActionEvent actionEvent) {
-    }
+
 }
