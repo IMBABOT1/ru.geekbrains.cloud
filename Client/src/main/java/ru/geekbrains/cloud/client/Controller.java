@@ -49,23 +49,9 @@ public class Controller implements Initializable {
                 public void run() {
                     try {
                         AbstractMessage message = (AbstractMessage) in.readObject();
-                        if (message instanceof AbstractMessage){
+                        if (message instanceof FileMessage){
                             FileMessage fm = (FileMessage) message;
-                            System.out.println(fm);
                             Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
-                        }
-                        if (message instanceof FileSend){
-                            FileSend fs = (FileSend) message;
-                            System.out.println(fs);
-                            System.out.println(2);
-                            if (Files.exists(Paths.get("ClientStorage/" + fs.getFilename()))) {
-                                System.out.println(3);
-                                FileMessage fm = new FileMessage(Paths.get("ClientStorage/" + fs.getFilename()));
-                                System.out.println(fm.getName());
-                                out.writeObject(fm);
-                                System.out.println(4);
-                            }
-
                         }
 
                     } catch (ClassNotFoundException e) {
@@ -119,7 +105,7 @@ public class Controller implements Initializable {
     }
 
     public void upload(ActionEvent actionEvent) {
-        sendMessage(new FileSend("321.txt"));
-        System.out.println(1);
+        FileSend fileSend = new FileSend(Paths.get("clientStorage/" + "321.txt"));
+        sendMessage(fileSend);
     }
 }

@@ -5,9 +5,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import ru.geekbrains.cloud.common.FileMessage;
 import ru.geekbrains.cloud.common.FileRequest;
+import ru.geekbrains.cloud.common.FileSend;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
     @Override
@@ -20,8 +22,13 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                     ctx.writeAndFlush(fm);
                 }
             }
-
-
+            if (msg instanceof FileSend) {
+                System.out.println(2);
+                FileSend fs = (FileSend) msg;
+                System.out.println(3);
+                Files.write(Paths.get("serverStorage/" + fs.getName()), fs.getData(), StandardOpenOption.CREATE);
+                System.out.println(4);
+            }
         }finally {
             ReferenceCountUtil.release(msg);
         }

@@ -33,7 +33,6 @@ public class Server {
                                     new ObjectDecoder(1024 * 1024 * 100, ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
                                     new MainHandler());
-                                    new SendObject();
                         }
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
