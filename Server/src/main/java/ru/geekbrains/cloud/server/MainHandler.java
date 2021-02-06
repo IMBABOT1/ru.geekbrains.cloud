@@ -23,11 +23,8 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 }
             }
             if (msg instanceof FileSend) {
-                System.out.println(2);
                 FileSend fs = (FileSend) msg;
-                System.out.println(3);
                 Files.write(Paths.get("serverStorage/" + fs.getName()), fs.getData(), StandardOpenOption.CREATE);
-                System.out.println(4);
             }
         }finally {
             ReferenceCountUtil.release(msg);

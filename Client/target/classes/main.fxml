@@ -10,14 +10,26 @@
 <?import javafx.scene.control.ListView?>
 <VBox fx:controller="ru.geekbrains.cloud.client.Controller"
       xmlns:fx="http://javafx.com/fxml" alignment="center">
+    <Label fx:id="cloud" text="Cloud Storage"  maxWidth="-Infinity"/>
+        <HBox>
+            <Label HBox.hgrow="ALWAYS" fx:id="local" text="Локальное хранилище" maxWidth="Infinity"/>
+            <Label HBox.hgrow="ALWAYS" fx:id="server" text="Серверное хранилище" maxWidth="Infinity"/>
+        </HBox>
+
+
        <HBox VBox.vgrow="ALWAYS">
            <ListView HBox.hgrow="ALWAYS" fx:id="clientsFiles"></ListView>
            <ListView HBox.hgrow="ALWAYS" fx:id="serverFiles"></ListView>
        </HBox>
 
         <HBox>
-            <Button text="Download" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#download"></Button>
-            <Button text="Upload" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#upload"></Button>
+
+            <Button text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientUpload"></Button>
+            <Button text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDelete"></Button>
+            <Button text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientRenew"></Button>
+
+            <Button text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDownload"></Button>
+            <Button text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverDelete"></Button>
+            <Button text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverRenew"></Button>
         </HBox>
-    <Label fx:id="label1" text="..." maxWidth="-Infinity"></Label>
 </VBox>
