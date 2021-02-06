@@ -1,16 +1,27 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <VBox fx:controller="ru.geekbrains.cloud.client.Controller"
       xmlns:fx="http://javafx.com/fxml" alignment="center">
     <Label fx:id="cloud" text="Cloud Storage"  maxWidth="-Infinity"/>
+    <HBox fx:id="loginBox">
+        <TextField fx:id="loginField" promptText="login" HBox.hgrow="ALWAYS">
+            <font>
+                <Font name="System" size="16"/>
+            </font>
+        </TextField>
+        <PasswordField fx:id="passwordField" promptText="password" onAction="#tryToAuth" HBox.hgrow="ALWAYS">
+            <font>
+                <Font name="System" size="16"/>
+            </font>
+        </PasswordField>
+        <Button HBox.hgrow="ALWAYS" text="Войти"  minWidth="100" onAction="#tryToAuth">
+            <font>
+                <Font name="System" size="16"/>
+            </font>
+        </Button>
+    </HBox>
+
         <HBox>
             <Label HBox.hgrow="ALWAYS" fx:id="local" text="Локальное хранилище" maxWidth="Infinity"/>
             <Label HBox.hgrow="ALWAYS" fx:id="server" text="Серверное хранилище" maxWidth="Infinity"/>
@@ -24,12 +35,12 @@
 
         <HBox>
 
-            <Button text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientUpload"></Button>
-            <Button text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDelete"></Button>
-            <Button text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientRenew"></Button>
+            <Button fx:id="sendFile" text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientUpload"></Button>
+            <Button fx:id="deleteFromClient" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDelete"></Button>
+            <Button fx:id="clientRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientRenew"></Button>
 
-            <Button text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDownload"></Button>
-            <Button text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverDelete"></Button>
-            <Button text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverRenew"></Button>
+            <Button fx:id="downloadFile" text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDownload"></Button>
+            <Button fx:id="deleteFromServer" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverDelete"></Button>
+            <Button fx:id="serverRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverRenew"></Button>
         </HBox>
 </VBox>

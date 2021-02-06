@@ -13,11 +13,22 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
+import java.sql.SQLException;
 
 
 public class Server {
+    private SqlAuthManager authManager;
 
     public void run() throws Exception {
+        authManager = new SqlAuthManager();
+        try {
+            authManager.connect();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         EventLoopGroup mainGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -41,6 +52,7 @@ public class Server {
         }finally {
             workerGroup.shutdownGracefully();
             mainGroup.shutdownGracefully();
+            authManager.disconnect();
         }
     }
 
@@ -51,6 +63,5 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

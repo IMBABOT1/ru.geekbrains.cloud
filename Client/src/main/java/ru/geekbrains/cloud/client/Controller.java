@@ -8,8 +8,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.layout.HBox;
 import ru.geekbrains.cloud.common.*;
 
 import java.io.IOException;
@@ -32,9 +35,6 @@ public class Controller implements Initializable {
     ListView<String> serverFiles;
 
     @FXML
-    Label label1;
-
-    @FXML
     Label cloud;
 
     @FXML
@@ -43,7 +43,55 @@ public class Controller implements Initializable {
     @FXML
     Label server;
 
+    @FXML
+    PasswordField passwordField;
+
+    @FXML
+    HBox loginBox;
+
+    @FXML
+    Button sendFile;
+
+    @FXML
+    Button deleteFromClient;
+
+    @FXML
+    Button clientRenew;
+
+    @FXML
+    Button downloadFile;
+
+    @FXML
+    Button deleteFromServer;
+
+    @FXML
+    Button serverRenew;
+
+
+
     public Network network;
+    private boolean authenticated;
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+        loginBox.setVisible(!authenticated);
+        loginBox.setManaged(!authenticated);
+        passwordField.setVisible(!authenticated);
+        passwordField.setVisible(!authenticated);
+        cloud.setVisible(authenticated);
+        local.setVisible(authenticated);
+        server.setManaged(authenticated);
+        clientsFiles.setVisible(authenticated);
+        serverFiles.setVisible(authenticated);
+        deleteFromClient.setVisible(authenticated);
+        clientRenew.setVisible(authenticated);
+        downloadFile.setVisible(authenticated);
+        deleteFromServer.setVisible(authenticated);
+        server.setVisible(authenticated);
+        sendFile.setVisible(authenticated);
+        serverRenew.setVisible(authenticated);
+
+    }
 
     private Path clientStorage = Paths.get("clientStorage/");
     private Path serverStorage = Paths.get("serverStorage/");
@@ -69,6 +117,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setAuthenticated(false);
         moveLocalLabel();
         moveCloudLabel();
         moveServerLabel();
@@ -179,5 +228,8 @@ public class Controller implements Initializable {
         ServerDeleteFile serverDeleteFile = new ServerDeleteFile(serverFiles.getSelectionModel().getSelectedItem());
         Network.sendMessage(serverDeleteFile);
         System.out.println(1);
+    }
+
+    public void tryToAuth(ActionEvent actionEvent) {
     }
 }
