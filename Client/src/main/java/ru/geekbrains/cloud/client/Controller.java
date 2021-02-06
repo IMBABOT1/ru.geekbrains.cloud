@@ -82,44 +82,42 @@ public class Controller implements Initializable {
             return;
         }
         network = new Network(8189);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
                     try {
-                        AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                        if (message instanceof FileMessage) {
-                            FileMessage fm = (FileMessage) message;
-                            Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
-                        }
-                        if (message instanceof GetServerListFiles) {
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    System.out.println(7);
-                                    serverFiles.getItems().clear();
-                                    System.out.println(8);
-                                    GetServerListFiles list = (GetServerListFiles) message;
-                                    System.out.println(9);
-                                    try {
-                                        Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                        System.out.println(10);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                        while (true) {
+                            AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                            System.out.println(message.toString());
+                            if (message instanceof FileMessage) {
+                                System.out.println(6);
+                                FileMessage fm = (FileMessage) message;
+                                Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                            }
+                            if (message instanceof GetServerListFiles) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        serverFiles.getItems().clear();
+                                        GetServerListFiles list = (GetServerListFiles) message;
+                                        try {
+                                            Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                            });
+                                });
 
+                            }
                         }
-
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }
-        }).start();
+            }).start();
+
     }
 
 
@@ -151,21 +149,18 @@ public class Controller implements Initializable {
 
 
     public void clientDownload(ActionEvent actionEvent) {
-        Network.sendMessage(new FileRequest("12.txt"));
+        Network.sendMessage(new FileRequest("RogueLike.rar"));
+        System.out.println(1);
     }
 
     public void clientUpload(ActionEvent actionEvent) {
-        String str = "";
-
         FileSend fileSend = new FileSend(Paths.get("clientStorage/" + clientsFiles.getSelectionModel().getSelectedItem()));
         Network.sendMessage(fileSend);
     }
 
     public void serverRenew(ActionEvent actionEvent) {
-        System.out.println(1);
         GetServerListFiles get = new GetServerListFiles("/getList");
         Network.sendMessage(get);
-        System.out.println(2);
     }
 
 
@@ -179,4 +174,3 @@ public class Controller implements Initializable {
     public void serverDelete(ActionEvent actionEvent) {
     }
 }
-

@@ -30,8 +30,8 @@ public class Network {
     public Network(int port){
         try {
             socket = new Socket("localhost", port);
-            in = new ObjectDecoderInputStream(socket.getInputStream());
-            out = new ObjectEncoderOutputStream(socket.getOutputStream());
+            in = new ObjectDecoderInputStream(socket.getInputStream(), 1024 * 1024 * 100);
+            out = new ObjectEncoderOutputStream(socket.getOutputStream(), 1024 * 1024 * 100);
         } catch (IOException e) {
             e.printStackTrace();
         }
