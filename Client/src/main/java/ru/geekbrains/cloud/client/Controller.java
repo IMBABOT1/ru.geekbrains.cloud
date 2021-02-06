@@ -48,19 +48,19 @@ public class Controller implements Initializable {
     private Path serverStorage = Paths.get("serverStorage/");
 
 
-    private void moveCloudLabel(){
+    private void moveCloudLabel() {
         cloud.setMaxWidth(Double.MAX_VALUE);
         cloud.setAlignment(Pos.BASELINE_CENTER);
         local.setPadding(new Insets(5));
     }
 
-    private void moveLocalLabel(){
+    private void moveLocalLabel() {
         local.setMaxWidth(Double.MAX_VALUE);
         local.setAlignment(Pos.BASELINE_LEFT);
         local.setPadding(new Insets(10));
     }
 
-    private void moveServerLabel(){
+    private void moveServerLabel() {
         server.setMaxWidth(Double.MAX_VALUE);
         server.setAlignment(Pos.BASELINE_RIGHT);
         server.setPadding(new Insets(10));
@@ -68,76 +68,77 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-            if (network != null && network.isConnected()) {
-                return;
-            }
-            network = new Network(8189);
-            moveLocalLabel();
-            moveCloudLabel();
-            moveServerLabel();
-            ObservableList<String> clients  = observableArrayList();
-            ObservableList<String> server = observableArrayList();
+        moveLocalLabel();
+        moveCloudLabel();
+        moveServerLabel();
+        ObservableList<String> clients = observableArrayList();
+        ObservableList<String> server = observableArrayList();
+        start();
+    }
 
 
-
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                        if (message instanceof FileMessage) {
-                            FileMessage fm = (FileMessage) message;
-                            Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
-                        }
-                        if (message instanceof  GetServerListFiles){
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    serverFiles.getItems().clear();
-                                    GetServerListFiles list = (GetServerListFiles) message;
-                                    try {
-                                        Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-
-                        }
-
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }finally {
-                        Network.stop();
+    public void start() {
+        if (network != null && network.isConnected()) {
+            return;
+        }
+        network = new Network(8189);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                    if (message instanceof FileMessage) {
+                        FileMessage fm = (FileMessage) message;
+                        Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
                     }
+                    if (message instanceof GetServerListFiles) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                serverFiles.getItems().clear();
+                                GetServerListFiles list = (GetServerListFiles) message;
+                                try {
+                                    Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    }
+
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
+        }).start();
+    }
 
 
-    public void refreshLocalList(){
+    public void refreshLocalList() {
         updateUI(new Runnable() {
             @Override
             public void run() {
-              try {
-                  clientsFiles.getItems().clear();
-                  Files.list(clientStorage).map(path -> path.getFileName().toString()).forEach(o -> clientsFiles.getItems().add(o));
-              }catch (IOException e){
-                  e.printStackTrace();
-              }
+                try {
+                    clientsFiles.getItems().clear();
+                    Files.list(clientStorage).map(path -> path.getFileName().toString()).forEach(o -> clientsFiles.getItems().add(o));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    public void refreshServerList(){
+    public void refreshServerList() {
     }
 
 
-    public void updateUI(Runnable r){
-        if (Platform.isFxApplicationThread()){
+    public void updateUI(Runnable r) {
+        if (Platform.isFxApplicationThread()) {
             r.run();
-        }else {
+        } else {
             Platform.runLater(r);
         }
     }
@@ -158,8 +159,6 @@ public class Controller implements Initializable {
     }
 
 
-
-
     public void clientRenew(ActionEvent actionEvent) {
         refreshLocalList();
     }
@@ -169,6 +168,5 @@ public class Controller implements Initializable {
 
     public void serverDelete(ActionEvent actionEvent) {
     }
-
-
 }
+
