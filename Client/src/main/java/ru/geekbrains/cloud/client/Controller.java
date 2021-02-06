@@ -1,5 +1,7 @@
 package ru.geekbrains.cloud.client;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,10 +17,12 @@ import ru.geekbrains.cloud.common.FileSend;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
 
+import static javafx.collections.FXCollections.observableArrayList;
 
 
 public class Controller implements Initializable {
@@ -42,6 +46,8 @@ public class Controller implements Initializable {
     Label server;
 
     public Network network;
+
+    private Path clientStorage = Paths.get("clientStorage/");
 
 
     private void moveCloudLabel(){
@@ -71,6 +77,16 @@ public class Controller implements Initializable {
             moveLocalLabel();
             moveCloudLabel();
             moveServerLabel();
+            ObservableList<String> clients  = observableArrayList();
+            refreshLocalList();
+
+
+
+        ObservableList<String> server = observableArrayList();
+        serverFiles.setItems(server);
+
+
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -93,7 +109,29 @@ public class Controller implements Initializable {
         }
 
 
+    public void refreshLocalList(){
+        updateUI(new Runnable() {
+            @Override
+            public void run() {
+              try {
+                  clientsFiles.getItems().clear();
+                  Files.list(clientStorage).map(path -> path.getFileName().toString()).forEach(o -> clientsFiles.getItems().add(o));
+              }catch (IOException e){
+                  e.printStackTrace();
+              }
+            }
+        });
 
+    }
+
+
+    public void updateUI(Runnable r){
+        if (Platform.isFxApplicationThread()){
+            r.run();
+        }else {
+            Platform.runLater(r);
+        }
+    }
 
 
     public void clientDownload(ActionEvent actionEvent) {
