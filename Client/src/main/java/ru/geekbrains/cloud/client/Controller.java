@@ -149,7 +149,6 @@ public class Controller implements Initializable {
 
     public void clientDownload(ActionEvent actionEvent) {
         Network.sendMessage(new FileRequest(serverFiles.getSelectionModel().getSelectedItem()));
-        System.out.println(1);
     }
 
     public void clientUpload(ActionEvent actionEvent) {
@@ -158,7 +157,7 @@ public class Controller implements Initializable {
     }
 
     public void serverRenew(ActionEvent actionEvent) {
-        GetServerListFiles get = new GetServerListFiles("/getList");
+        GetServerListFiles get = new GetServerListFiles();
         Network.sendMessage(get);
     }
 
@@ -176,6 +175,8 @@ public class Controller implements Initializable {
     }
 
     public void serverDelete(ActionEvent actionEvent) {
-
+        ServerDeleteFile serverDeleteFile = new ServerDeleteFile(serverFiles.getSelectionModel().getSelectedItem());
+        Network.sendMessage(serverDeleteFile);
+        System.out.println(1);
     }
 }

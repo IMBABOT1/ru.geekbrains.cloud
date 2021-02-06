@@ -5,10 +5,6 @@ import java.util.List;
 
 public class GetServerListFiles extends AbstractMessage  {
 
-    public String getServerList() {
-        return getServerList;
-    }
-
     public List<String> getList() {
         return list;
     }
@@ -19,10 +15,8 @@ public class GetServerListFiles extends AbstractMessage  {
     }
 
     private List<String> list;
-    private String getServerList;
 
-    public GetServerListFiles(String getServerList){
-        this.getServerList = getServerList;
+    public GetServerListFiles(){
         this.list = new ArrayList<>();
     }
 }
