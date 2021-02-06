@@ -8,10 +8,13 @@ import ru.geekbrains.cloud.common.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private SqlAuthManager sqlAuthManager;
+    private List<String> users;
+    private boolean contains;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -50,6 +53,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             ReferenceCountUtil.release(msg);
         }
     }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

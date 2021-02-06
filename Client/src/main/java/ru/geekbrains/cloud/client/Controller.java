@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -74,6 +75,7 @@ public class Controller implements Initializable {
     public Network network;
     private boolean authenticated;
     private String login1;
+    private HashMap<String, Integer> map;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -126,6 +128,8 @@ public class Controller implements Initializable {
         moveServerLabel();
         ObservableList<String> clients = observableArrayList();
         ObservableList<String> server = observableArrayList();
+        map = new HashMap<>();
+
         start();
     }
 
@@ -141,11 +145,12 @@ public class Controller implements Initializable {
                 try {
                     while (true) {
                         String username = (String) Network.getIn().readObject();
-                        if (username instanceof String) {
-                            System.out.println(username);
+                        System.out.println(username);
+                        if (username.equals("")){
+                            setAuthenticated(false);
+                        }else {
                             setAuthenticated(true);
                         }
-
                         while (true) {
                             AbstractMessage message = (AbstractMessage) network.getIn().readObject();
                             if (message instanceof FileMessage) {
@@ -190,9 +195,6 @@ public class Controller implements Initializable {
                 }
             }
         });
-    }
-
-    public void refreshServerList() {
     }
 
 
