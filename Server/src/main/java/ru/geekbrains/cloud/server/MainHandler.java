@@ -46,6 +46,8 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof  CloseConnection){
                 String name = ((CloseConnection) msg).getUsername();
                 map.remove(name);
+                CloseConnection cs = new CloseConnection("/close");
+                ctx.writeAndFlush(cs);
                 ctx.close();
             }
 

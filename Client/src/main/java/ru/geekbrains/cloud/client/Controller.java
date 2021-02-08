@@ -164,6 +164,11 @@ public class Controller implements Initializable {
                                         Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
                                     }
 
+                                    if (message instanceof  CloseConnection){
+                                        System.exit(1);
+                                        break;
+                                    }
+
                                     if (message instanceof GetServerListFiles) {
                                         Platform.runLater(new Runnable() {
                                             @Override
