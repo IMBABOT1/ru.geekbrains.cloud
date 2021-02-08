@@ -147,6 +147,7 @@ public class Controller implements Initializable {
                                 continue;
                             } else if (username.startsWith("username")) {
                                 setAuthenticated(true);
+                                continue;
                             }
                         }else {
                             while (true) {
