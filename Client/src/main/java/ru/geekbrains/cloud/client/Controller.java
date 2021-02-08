@@ -69,9 +69,13 @@ public class Controller implements Initializable {
     @FXML
     TextField loginField;
 
+    @FXML
+    Button closeConnection;
+
 
     private Network network;
     private boolean authenticated;
+    private String user;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -91,6 +95,7 @@ public class Controller implements Initializable {
         server.setVisible(authenticated);
         sendFile.setVisible(authenticated);
         serverRenew.setVisible(authenticated);
+        closeConnection.setVisible(authenticated);
 
     }
 
@@ -124,6 +129,7 @@ public class Controller implements Initializable {
         moveServerLabel();
         ObservableList<String> clients = observableArrayList();
         ObservableList<String> server = observableArrayList();
+        user = "";
         start();
     }
 
@@ -140,37 +146,39 @@ public class Controller implements Initializable {
             public void run() {
                 try {
                     while (true) {
-                        if (Network.getIn().readObject() instanceof String) {
-                            String username = (String) network.getIn().readObject();
-                            if (username.equals("")) {
-                                setAuthenticated(false);
-                                continue;
-                            } else if (username.startsWith("username")) {
-                                setAuthenticated(true);
-                                continue;
-                            }
-                        }else {
-                            while (true) {
-                                AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                                if (message instanceof FileMessage) {
-                                    FileMessage fm = (FileMessage) message;
-                                    Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                            if (Network.getIn().readObject() instanceof String) {
+                                String username = (String) network.getIn().readObject();
+                                if (username.equals("")) {
+                                    setAuthenticated(false);
+                                    continue;
+                                } else if (username.startsWith("username")) {
+                                    setAuthenticated(true);
+                                    user = username;
+                                    continue;
                                 }
-                                if (message instanceof GetServerListFiles) {
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            serverFiles.getItems().clear();
-                                            GetServerListFiles list = (GetServerListFiles) message;
-                                            try {
-                                                Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
+                            } else {
+                                while (true) {
+                                    AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                                    if (message instanceof FileMessage) {
+                                        FileMessage fm = (FileMessage) message;
+                                        Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                                    }
+
+                                    if (message instanceof GetServerListFiles) {
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                serverFiles.getItems().clear();
+                                                GetServerListFiles list = (GetServerListFiles) message;
+                                                try {
+                                                    Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
-                            }
                         }
                     }
                 }catch (ClassNotFoundException e){
@@ -248,5 +256,11 @@ public class Controller implements Initializable {
         sendLoginPass(loginField.getText(), passwordField.getText());
         loginField.clear();
         passwordField.clear();
+    }
+
+    public void closeConnection(ActionEvent actionEvent) {
+        CloseConnection connection = new CloseConnection(user);
+        Network.sendMessage(connection);
+        System.exit(1);
     }
 }

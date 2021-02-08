@@ -38,9 +38,11 @@
             <Button fx:id="sendFile" text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientUpload"></Button>
             <Button fx:id="deleteFromClient" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDelete"></Button>
             <Button fx:id="clientRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientRenew"></Button>
+            <Button fx:id="closeConnection" text="Завершить сессию" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#closeConnection"></Button>
 
             <Button fx:id="downloadFile" text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDownload"></Button>
             <Button fx:id="deleteFromServer" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverDelete"></Button>
             <Button fx:id="serverRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverRenew"></Button>
+
         </HBox>
 </VBox>
