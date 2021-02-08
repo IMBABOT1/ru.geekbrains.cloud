@@ -33,6 +33,7 @@ public class SqlAuthManager implements AuthManager {
         }
     }
 
+
     @Override
     public String getNickNameByLoginAndPassword(String login, String password) throws SQLException {
         String s = "";

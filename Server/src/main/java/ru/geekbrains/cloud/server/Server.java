@@ -14,12 +14,10 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class Server {
     private SqlAuthManager authManager;
-    private ArrayList<String> users;
 
     public void run() throws Exception {
         authManager = new SqlAuthManager();
@@ -57,6 +55,7 @@ public class Server {
             authManager.disconnect();
         }
     }
+
 
 
 

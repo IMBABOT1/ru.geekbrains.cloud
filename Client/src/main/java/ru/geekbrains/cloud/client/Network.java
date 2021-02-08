@@ -27,6 +27,7 @@ public class Network {
     private static ObjectDecoderInputStream in;
 
 
+
     public Network(int port){
         try {
             socket = new Socket("localhost", port);

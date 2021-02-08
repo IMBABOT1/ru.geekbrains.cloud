@@ -8,17 +8,18 @@ import ru.geekbrains.cloud.common.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private SqlAuthManager sqlAuthManager;
-    private List<String> users;
-    private boolean contains;
+    private static HashMap<String, Integer> map = new HashMap<>();
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         sqlAuthManager = new SqlAuthManager();
+
         try {
             System.out.println(msg.toString());
             if (msg instanceof FileRequest) {
@@ -46,13 +47,29 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 String username = "";
                 TryToAuth sd = (TryToAuth) msg;
                 username = sqlAuthManager.getNickNameByLoginAndPassword(sd.getLogin(), sd.getPass());
+                if (!map.containsKey(username)){
+                    map.put(username, 1);
+                }else if (map.containsKey(username)){
+                    map.put(username, map.get(username) + 1);
+                }
+
+                for (Map.Entry<String, Integer> map : map.entrySet()){
+                    if (map.getKey().equals(username) && map.getValue() > 1){
+                        username = "";
+                        ctx.writeAndFlush(username);
+                    }else if (map.getKey().equals(username) && map.getValue() == 1){
+                        ctx.writeAndFlush(username);;
+                    }
+                }
+
                 ctx.writeAndFlush(username);
             }
-
         }finally {
             ReferenceCountUtil.release(msg);
         }
     }
+
+
 
 
     @Override

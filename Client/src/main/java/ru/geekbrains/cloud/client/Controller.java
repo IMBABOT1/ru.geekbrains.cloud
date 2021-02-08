@@ -18,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -72,10 +71,8 @@ public class Controller implements Initializable {
     TextField loginField;
 
 
-    public Network network;
+    private Network network;
     private boolean authenticated;
-    private String login1;
-    private HashMap<String, Integer> map;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -128,10 +125,9 @@ public class Controller implements Initializable {
         moveServerLabel();
         ObservableList<String> clients = observableArrayList();
         ObservableList<String> server = observableArrayList();
-        map = new HashMap<>();
-
         start();
     }
+
 
 
     public void start() {
@@ -139,18 +135,22 @@ public class Controller implements Initializable {
             return;
         }
         network = new Network(8189);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (true) {
-                        String username = (String) Network.getIn().readObject();
-                        System.out.println(username);
-                        if (username.equals("")){
-                            setAuthenticated(false);
+                        if (Network.getIn().readObject() instanceof String) {
+                            String username = (String) network.getIn().readObject();
+                            if (username.equals("")) {
+                                setAuthenticated(false);
+                                continue;
+                            } else if (username.startsWith("username")) {
+                                setAuthenticated(true);
+                                continue;
+                            }
                         }else {
-                            setAuthenticated(true);
-                        }
                         while (true) {
                             AbstractMessage message = (AbstractMessage) network.getIn().readObject();
                             if (message instanceof FileMessage) {
@@ -171,6 +171,7 @@ public class Controller implements Initializable {
                                     }
                                 });
                             }
+                        }
                         }
                     }
                 }catch (ClassNotFoundException e){
@@ -245,11 +246,9 @@ public class Controller implements Initializable {
     }
 
     public void tryToAuth() {
-        System.out.println(1);
         sendLoginPass(loginField.getText(), passwordField.getText());
         loginField.clear();
         passwordField.clear();
-        System.out.println(2);
     }
 }
 
