@@ -1,4 +1,3 @@
-
 package ru.geekbrains.cloud.client;
 
 import javafx.application.Platform;
@@ -148,30 +147,29 @@ public class Controller implements Initializable {
                                 continue;
                             } else if (username.startsWith("username")) {
                                 setAuthenticated(true);
-                                continue;
                             }
                         }else {
-                        while (true) {
-                            AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                            if (message instanceof FileMessage) {
-                                FileMessage fm = (FileMessage) message;
-                                Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
-                            }
-                            if (message instanceof GetServerListFiles) {
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        serverFiles.getItems().clear();
-                                        GetServerListFiles list = (GetServerListFiles) message;
-                                        try {
-                                            Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
+                            while (true) {
+                                AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                                if (message instanceof FileMessage) {
+                                    FileMessage fm = (FileMessage) message;
+                                    Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                                }
+                                if (message instanceof GetServerListFiles) {
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            serverFiles.getItems().clear();
+                                            GetServerListFiles list = (GetServerListFiles) message;
+                                            try {
+                                                Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
-                        }
                         }
                     }
                 }catch (ClassNotFoundException e){
@@ -179,9 +177,9 @@ public class Controller implements Initializable {
                 }catch (IOException e){
                     e.printStackTrace();
                 }
-                }
-            }).start();
-        }
+            }
+        }).start();
+    }
 
 
     public void refreshLocalList() {
@@ -251,4 +249,3 @@ public class Controller implements Initializable {
         passwordField.clear();
     }
 }
-

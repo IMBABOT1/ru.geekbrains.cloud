@@ -34,9 +34,13 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 Files.write(Paths.get("serverStorage/" + fs.getName()), fs.getData(), StandardOpenOption.CREATE);
             }
             if (msg instanceof GetServerListFiles){
+                System.out.println(2);
                 GetServerListFiles clientsFiles = (GetServerListFiles) msg;
+                System.out.println(3);
                 Files.list(Paths.get("serverStorage/")).map(path -> path.getFileName().toString()).forEach(o -> clientsFiles.setList(o));
+                System.out.println(4);
                 ctx.writeAndFlush(clientsFiles);
+                System.out.println(5);
             }
             if (msg instanceof ServerDeleteFile){
                 ServerDeleteFile sd = (ServerDeleteFile) msg;
