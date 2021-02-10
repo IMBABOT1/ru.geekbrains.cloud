@@ -22,27 +22,27 @@
         </Button>
     </HBox>
 
-        <HBox>
-            <Label HBox.hgrow="ALWAYS" fx:id="local" text="Локальное хранилище" maxWidth="Infinity"/>
-            <Label HBox.hgrow="ALWAYS" fx:id="server" text="Серверное хранилище" maxWidth="Infinity"/>
-        </HBox>
+    <HBox>
+        <Label HBox.hgrow="ALWAYS" fx:id="local" text="Локальное хранилище" maxWidth="Infinity"/>
+        <Label HBox.hgrow="ALWAYS" fx:id="server" text="Серверное хранилище" maxWidth="Infinity"/>
+    </HBox>
 
 
-       <HBox VBox.vgrow="ALWAYS">
-           <ListView HBox.hgrow="ALWAYS" fx:id="clientsFiles"></ListView>
-           <ListView HBox.hgrow="ALWAYS" fx:id="serverFiles"></ListView>
-       </HBox>
+    <HBox VBox.vgrow="ALWAYS">
+        <ListView HBox.hgrow="ALWAYS" fx:id="clientsFiles"></ListView>
+        <ListView HBox.hgrow="ALWAYS" fx:id="serverFiles"></ListView>
+    </HBox>
 
-        <HBox>
+    <HBox>
 
-            <Button fx:id="sendFile" text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientUpload"></Button>
-            <Button fx:id="deleteFromClient" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDelete"></Button>
-            <Button fx:id="clientRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientRenew"></Button>
-            <Button fx:id="closeConnection" text="Завершить сессию" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#closeConnection"></Button>
+        <Button fx:id="sendFile" text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientUpload"></Button>
+        <Button fx:id="deleteFromClient" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDelete"></Button>
+        <Button fx:id="clientRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientRenew"></Button>
+        <Button fx:id="closeConnection" text="Завершить сессию" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#closeConnection"></Button>
 
-            <Button fx:id="downloadFile" text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDownload"></Button>
-            <Button fx:id="deleteFromServer" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverDelete"></Button>
-            <Button fx:id="serverRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverRenew"></Button>
+        <Button fx:id="downloadFile" text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#clientDownload"></Button>
+        <Button fx:id="deleteFromServer" text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverDelete"></Button>
+        <Button fx:id="serverRenew" text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#serverRenew"></Button>
 
-        </HBox>
+    </HBox>
 </VBox>

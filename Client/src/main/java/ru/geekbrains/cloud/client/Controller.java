@@ -146,44 +146,44 @@ public class Controller implements Initializable {
             public void run() {
                 try {
                     while (true) {
-                            if (Network.getIn().readObject() instanceof String) {
-                                String username = (String) network.getIn().readObject();
-                                if (username.equals("")) {
-                                    setAuthenticated(false);
-                                    continue;
-                                } else if (username.startsWith("username")) {
-                                    setAuthenticated(true);
-                                    user = username;
-                                }
+                        if (Network.getIn().readObject() instanceof String) {
+                            String username = (String) network.getIn().readObject();
+                            if (username.equals("")) {
+                                setAuthenticated(false);
+                                continue;
+                            } else if (username.startsWith("username")) {
+                                setAuthenticated(true);
+                                user = username;
                             }
-                    while (true) {
-                        AbstractMessage message = (AbstractMessage) network.getIn().readObject();
-                        if (message instanceof FileMessage) {
-                            FileMessage fm = (FileMessage) message;
-                            Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
                         }
+                        while (true) {
+                            AbstractMessage message = (AbstractMessage) network.getIn().readObject();
+                            if (message instanceof FileMessage) {
+                                FileMessage fm = (FileMessage) message;
+                                Files.write(Paths.get("clientStorage/" + fm.getName()), fm.getData(), StandardOpenOption.CREATE);
+                            }
 
-                        if (message instanceof  CloseConnection){
-                            System.exit(1);
-                            break;
-                        }
+                            if (message instanceof  CloseConnection){
+                                System.exit(1);
+                                break;
+                            }
 
-                        if (message instanceof GetServerListFiles) {
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                serverFiles.getItems().clear();
-                                GetServerListFiles list = (GetServerListFiles) message;
-                                try {
-                                    Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
+                            if (message instanceof GetServerListFiles) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        serverFiles.getItems().clear();
+                                        GetServerListFiles list = (GetServerListFiles) message;
+                                        try {
+                                            Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> serverFiles.getItems().add(o));
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
+                                });
+                            }
                         }
+                    }
 
                 }catch (ClassNotFoundException e){
                     e.printStackTrace();
@@ -265,6 +265,6 @@ public class Controller implements Initializable {
     public void closeConnection(ActionEvent actionEvent) {
         CloseConnection connection = new CloseConnection(user);
         Network.sendMessage(connection);
-        System.exit(1);
+        System.exit(0);
     }
 }
